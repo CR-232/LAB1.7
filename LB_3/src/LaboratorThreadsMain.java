@@ -19,11 +19,11 @@ public class LaboratorThreadsMain {
         System.out.println("Echipa: Cuturov Oleg si Costriba Serafim\n");
 
         System.out.println("Array 1  [234, 1000]:");
-        printArray(ARRAY1);
+        //printArray(ARRAY1);
         System.out.println();
 
         System.out.println("Array 2  [456, 1234]:");
-        printArray(ARRAY2);
+       // printArray(ARRAY2);
         System.out.println();
 
         System.out.println("Starting Thread 1");
