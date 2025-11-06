@@ -1,16 +1,20 @@
 public class LaboratorThreadsMain {
 
-
     public static final String NUME_STUDENT = "Cuturov Oleg si Costriba Serafim";
     public static final String PRENUME_STUDENT = "Oleg";
     public static final String GRUPA = "CR-232";
     public static final String DISCIPLINA = "Programarea Concurentă și distribuită";
 
-
+    // =============================
+    // Array-urile comune
+    // =============================
     public static final int[] ARRAY1 = generateArray(234, 1000);
     public static final int[] ARRAY2 = generateArray(456, 1234);
 
-    // sincronizator comun
+    // =============================
+    // Sincronizator comun
+    // afișare în ordinea: 2, 4, 1, 3
+    // =============================
     public static final SyncHelper SYNC = new SyncHelper(new int[]{2, 4, 1, 3}, 4);
 
     public static void main(String[] args) {
@@ -18,12 +22,12 @@ public class LaboratorThreadsMain {
         System.out.println("=== LABORATOR CR-232 ===");
         System.out.println("Echipa: Cuturov Oleg si Costriba Serafim\n");
 
-        System.out.println("Array 1  [234, 1000]:");
-        //printArray(ARRAY1);
+        System.out.println("TH_3  [234, 1000]:");
+        printArray(ARRAY1);
         System.out.println();
 
-        System.out.println("Array 2  [456, 1234]:");
-       // printArray(ARRAY2);
+        System.out.println("TH_4  [456, 1234]:");
+        printArray(ARRAY2);
         System.out.println();
 
         System.out.println("Starting Thread 1");
@@ -31,9 +35,9 @@ public class LaboratorThreadsMain {
         System.out.println("Starting Thread 3");
         System.out.println("Starting Thread 4\n");
 
-        // firele sunt în alte fișiere
-       Thread th1 = new Thread(new ThreadsSerafim.Task1(), "Thread-1");
-       Thread th2 = new Thread(new ThreadsSerafim.Task2(), "Thread-2");
+        // firele din fișiere separate
+        Thread th1 = new Thread(new ThreadsSerafim.Task1(), "Thread-1");
+        Thread th2 = new Thread(new ThreadsSerafim.Task2(), "Thread-2");
         Thread th3 = new Thread(new ThreadsOleg.Task3(), "Thread-3");
         Thread th4 = new Thread(new ThreadsOleg.Task4(), "Thread-4");
 
@@ -43,7 +47,7 @@ public class LaboratorThreadsMain {
         th4.start();
 
         try {
-           th1.join();
+            th1.join();
             th2.join();
             th3.join();
             th4.join();
@@ -54,7 +58,7 @@ public class LaboratorThreadsMain {
         System.out.println("\nToate firele de execuție s-au încheiat.");
     }
 
-
+    // ================= utilitare =================
 
     private static int[] generateArray(int start, int end) {
         int size = end - start + 1;
@@ -65,9 +69,17 @@ public class LaboratorThreadsMain {
         return array;
     }
 
+    private static void printArray(int[] array) {
+        for (int i = 0; i < array.length; i++) {
+            System.out.print(array[i] + " ");
+            if ((i + 1) % 15 == 0) {
+                System.out.println();
+            }
+        }
+        System.out.println();
+    }
 
-
-
+    // ================= sincronizator comun =================
     public static class SyncHelper {
         private volatile int finishedThreads = 0;
         private volatile int currentDisplay = 0;
@@ -103,10 +115,13 @@ public class LaboratorThreadsMain {
                 }
             }
 
-
             for (char c : (threadNumber + ": " + text).toCharArray()) {
                 System.out.print(c);
-                try { Thread.sleep(50); } catch (InterruptedException e) {}
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    // ignore
+                }
             }
             System.out.println();
 

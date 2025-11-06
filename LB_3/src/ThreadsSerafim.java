@@ -80,9 +80,7 @@ public class ThreadsSerafim {
                         pairsInCurrentGroup++;
 
                         System.out.println("Th2: Perechea " + pairCount + ": (" + previousEven + ", " + value + ") -> " +
-                                previousEven + " * " + value + " = " + product);
-
-                        if (pairsInCurrentGroup == 2) {
+                                previousEven + " * " + value + " = " + product);if (pairsInCurrentGroup == 2) {
                             System.out.println("Th2: Rezultat combinat: " + currentGroupSum);
                             totalSum += currentGroupSum;
                             System.out.println("-----------------------------------");
