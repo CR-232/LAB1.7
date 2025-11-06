@@ -65,15 +65,7 @@ public class LaboratorThreadsMain {
         return array;
     }
 
-    private static void printArray(int[] array) {
-        for (int i = 0; i < array.length; i++) {
-            System.out.print(array[i] + " ");
-            if ((i + 1) % 15 == 0) {
-                System.out.println();
-            }
-        }
-        System.out.println();
-    }
+
 
 
     public static class SyncHelper {
