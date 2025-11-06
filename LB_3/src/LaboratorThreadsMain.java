@@ -1,12 +1,12 @@
 public class LaboratorThreadsMain {
 
-    // datele comune – vizibile din alte fișiere
+
     public static final String NUME_STUDENT = "Cuturov Oleg si Costriba Serafim";
     public static final String PRENUME_STUDENT = "Oleg";
     public static final String GRUPA = "CR-232";
     public static final String DISCIPLINA = "Programarea Concurentă și distribuită";
 
-    // array-urile comune
+
     public static final int[] ARRAY1 = generateArray(234, 1000);
     public static final int[] ARRAY2 = generateArray(456, 1234);
 
@@ -32,19 +32,19 @@ public class LaboratorThreadsMain {
         System.out.println("Starting Thread 4\n");
 
         // firele sunt în alte fișiere
-       // Thread th1 = new Thread(new ThreadsSerafim.Task1(), "Thread-1");
-      //  Thread th2 = new Thread(new ThreadsSerafim.Task2(), "Thread-2");
+       Thread th1 = new Thread(new ThreadsSerafim.Task1(), "Thread-1");
+       Thread th2 = new Thread(new ThreadsSerafim.Task2(), "Thread-2");
         Thread th3 = new Thread(new ThreadsOleg.Task3(), "Thread-3");
         Thread th4 = new Thread(new ThreadsOleg.Task4(), "Thread-4");
 
-        //th1.start();
-       // th2.start();
+        th1.start();
+        th2.start();
         th3.start();
         th4.start();
 
         try {
-         //   th1.join();
-         //   th2.join();
+           th1.join();
+            th2.join();
             th3.join();
             th4.join();
         } catch (InterruptedException e) {
@@ -54,7 +54,7 @@ public class LaboratorThreadsMain {
         System.out.println("\nToate firele de execuție s-au încheiat.");
     }
 
-    // ================= utilitare =================
+
 
     private static int[] generateArray(int start, int end) {
         int size = end - start + 1;
@@ -75,7 +75,7 @@ public class LaboratorThreadsMain {
         System.out.println();
     }
 
-    // ================= sincronizator comun =================
+
     public static class SyncHelper {
         private volatile int finishedThreads = 0;
         private volatile int currentDisplay = 0;
@@ -111,7 +111,7 @@ public class LaboratorThreadsMain {
                 }
             }
 
-            // afișare cu efect
+
             for (char c : (threadNumber + ": " + text).toCharArray()) {
                 System.out.print(c);
                 try { Thread.sleep(50); } catch (InterruptedException e) {}
