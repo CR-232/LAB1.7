@@ -11,10 +11,7 @@ public class LaboratorThreadsMain {
     public static final int[] ARRAY1 = generateArray(234, 1000);
     public static final int[] ARRAY2 = generateArray(456, 1234);
 
-    // =============================
-    // Sincronizator comun
-    // afișare în ordinea: 2, 4, 1, 3
-    // =============================
+
     public static final SyncHelper SYNC = new SyncHelper(new int[]{2, 4, 1, 3}, 4);
 
     public static void main(String[] args) {
