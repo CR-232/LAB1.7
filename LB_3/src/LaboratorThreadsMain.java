@@ -24,15 +24,6 @@ public class LaboratorThreadsMain {
         System.out.println("=== LABORATOR CR-232 ===");
         System.out.println("Echipa: Cuturov Oleg si Costriba Serafim\n");
 
-        System.out.println("Array1 [234..1000]:");
-        printArray(array1);
-        System.out.println();
-
-        System.out.println("Array2 [456..1234]:");
-        printArray(array2);
-        System.out.println();
-
-
         Thread th1 = new Thread(new ThreadsSerafim.Task1(), "Thread-1");
         Thread th2 = new Thread(new ThreadsSerafim.Task2(), "Thread-2");
         Thread th3 = new Thread(new ThreadsOleg.Task3(), "Thread-3");
@@ -69,13 +60,7 @@ public class LaboratorThreadsMain {
         return arr;
     }
 
-    public static void printArray(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            System.out.print(arr[i] + " ");
-            if ((i + 1) % 15 == 0) System.out.println();
-        }
-        System.out.println();
-    }
+
 
     public static synchronized void threadFinished() {
         finishedThreads++;
