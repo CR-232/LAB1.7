@@ -4,107 +4,91 @@ public class ThreadsSerafim {
     public static class Task1 implements Runnable {
         @Override
         public void run() {
-            System.out.println("Th1 started: Calcul suma produse numere pare consecutive (incepand cu primul)");
-            System.out.println("Th1: Parcurgere DE LA ÎNCEPUT intervalul [234, 1000]");
 
-            int[] array1 = LaboratorThreadsMain.ARRAY1;
+            System.out.println("Th1 started: Procesare array1 (de la început)");
+
             long totalSum = 0;
-            int pairCount = 0;
-            int previousEven = -1;
-            long currentGroupSum = 0;
-            int pairsInCurrentGroup = 0;
+            long groupSum = 0;
+            int prevEven = -1;
+            int groupCount = 0;
 
-            for (int value : array1) {
-                if (value % 2 == 0) {
-                    if (previousEven != -1) {
-                        long product = (long) previousEven * value;
-                        currentGroupSum += product;
-                        pairCount++;
-                        pairsInCurrentGroup++;
+            for (int x : LaboratorThreadsMain.array1) {
+                if (x % 2 == 0) {
+                    if (prevEven != -1) {
+                        long prod = (long) prevEven * x;
+                        groupSum += prod;
+                        groupCount++;
 
-                        System.out.println("Th1: Perechea " + pairCount + ": (" + previousEven + ", " + value + ") -> " +
-                                previousEven + " * " + value + " = " + product);
+                        System.out.println("Th1: (" + prevEven + ", " + x + ") = " + prod);
 
-                        if (pairsInCurrentGroup == 2) {
-                            System.out.println("Th1: Rezultat combinat: " + currentGroupSum);
-                            totalSum += currentGroupSum;
+                        if (groupCount == 2) {
+                            totalSum += groupSum;
+                            groupSum = 0;
+                            groupCount = 0;
                             System.out.println("-----------------------------------");
-                            currentGroupSum = 0;
-                            pairsInCurrentGroup = 0;
                         }
-                        previousEven = -1;
-                        try { Thread.sleep(2); } catch (InterruptedException e) {}
-                    } else {
-                        previousEven = value;
-                    }
+
+                        prevEven = -1;
+                    } else prevEven = x;
                 }
             }
 
-            if (currentGroupSum > 0) {
-                totalSum += currentGroupSum;
-                System.out.println("Th1: Rezultat combinat final: " + currentGroupSum);
-            }
+            if (groupSum > 0) totalSum += groupSum;
 
-            System.out.println("\n>>> Th1 FINAL: Suma totala = " + totalSum + " (" + pairCount + " perechi calculate)");
+            System.out.println(">>> Th1 FINAL: Total = " + totalSum);
 
-            // sincronizare
-            LaboratorThreadsMain.SYNC.markFinished();
-            LaboratorThreadsMain.SYNC.waitAll();
-            LaboratorThreadsMain.SYNC.displayInOrder(1, LaboratorThreadsMain.PRENUME_STUDENT);
+            LaboratorThreadsMain.threadFinished();
+            LaboratorThreadsMain.waitForAllThreads();
+
+            LaboratorThreadsMain.displayInOrder("Thread-1", LaboratorThreadsMain.PRENUME_STUDENT);
         }
     }
 
-    // =============================
-    // Task2 – ca în codul tău
-    // =============================
+    // ============================
+    // THREAD 2 – Serafim
+    // ============================
     public static class Task2 implements Runnable {
         @Override
         public void run() {
-            System.out.println("Th2 started: Calcul suma produse numere pare consecutive (incepand cu ultimul)");
-            System.out.println("Th2: Parcurgere DE LA SFÂRȘIT intervalul [234, 1000]");
 
-            int[] array1 = LaboratorThreadsMain.ARRAY1;
+            System.out.println("Th2 started: Procesare array1 (de la sfârșit)");
+
             long totalSum = 0;
-            int pairCount = 0;
-            int previousEven = -1;
-            long currentGroupSum = 0;
-            int pairsInCurrentGroup = 0;
+            long groupSum = 0;
+            int prevEven = -1;
+            int groupCount = 0;
 
-            for (int i = array1.length - 1; i >= 0; i--) {
-                int value = array1[i];
-                if (value % 2 == 0) {
-                    if (previousEven != -1) {
-                        long product = (long) previousEven * value;
-                        currentGroupSum += product;
-                        pairCount++;
-                        pairsInCurrentGroup++;
+            for (int i = LaboratorThreadsMain.array1.length - 1; i >= 0; i--) {
+                int x = LaboratorThreadsMain.array1[i];
 
-                        System.out.println("Th2: Perechea " + pairCount + ": (" + previousEven + ", " + value + ") -> " +
-                                previousEven + " * " + value + " = " + product);if (pairsInCurrentGroup == 2) {
-                            System.out.println("Th2: Rezultat combinat: " + currentGroupSum);
-                            totalSum += currentGroupSum;
+                if (x % 2 == 0) {
+                    if (prevEven != -1) {
+                        long prod = (long) prevEven * x;
+                        groupSum += prod;
+                        groupCount++;
+
+                        System.out.println("Th2: (" + prevEven + ", " + x + ") = " + prod);
+
+                        if (groupCount == 2) {
+                            totalSum += groupSum;
+                            groupSum = 0;
+                            groupCount = 0;
                             System.out.println("-----------------------------------");
-                            currentGroupSum = 0;
-                            pairsInCurrentGroup = 0;
                         }
-                        previousEven = -1;
-                        try { Thread.sleep(2); } catch (InterruptedException e) {}
-                    } else {
-                        previousEven = value;
-                    }
+
+                        prevEven = -1;
+                    } else prevEven = x;
                 }
             }
 
-            if (currentGroupSum > 0) {
-                totalSum += currentGroupSum;
-                System.out.println("Th2: Rezultat combinat final: " + currentGroupSum);
-            }
+            if (groupSum > 0) totalSum += groupSum;
 
-            System.out.println("\n>>> Th2 FINAL: Suma totala = " + totalSum + " (" + pairCount + " perechi calculate)");
+            System.out.println(">>> Th2 FINAL: Total = " + totalSum);
 
-            LaboratorThreadsMain.SYNC.markFinished();
-            LaboratorThreadsMain.SYNC.waitAll();
-            LaboratorThreadsMain.SYNC.displayInOrder(2, LaboratorThreadsMain.NUME_STUDENT);
+            LaboratorThreadsMain.threadFinished();
+            LaboratorThreadsMain.waitForAllThreads();
+
+            LaboratorThreadsMain.displayInOrder("Thread-2", LaboratorThreadsMain.NUME_STUDENT);
         }
     }
 }

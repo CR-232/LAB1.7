@@ -1,42 +1,47 @@
 public class LaboratorThreadsMain {
 
+
     public static final String NUME_STUDENT = "Cuturov Oleg si Costriba Serafim";
     public static final String PRENUME_STUDENT = "Oleg";
     public static final String GRUPA = "CR-232";
     public static final String DISCIPLINA = "Programarea Concurentă și distribuită";
 
-    // =============================
-    // Array-urile comune
-    // =============================
-    public static final int[] ARRAY1 = generateArray(234, 1000);
-    public static final int[] ARRAY2 = generateArray(456, 1234);
+
+    public static final int[] array1 = generateArray(234, 1000);
+    public static final int[] array2 = generateArray(456, 1234);
 
 
-    public static final SyncHelper SYNC = new SyncHelper(new int[]{2, 4, 1, 3}, 4);
+    public static volatile int finishedThreads = 0;
+    public static volatile int currentDisplay = 0;
+
+    public static final String[] DISPLAY_ORDER = {
+            "Thread-2", "Thread-4", "Thread-1", "Thread-3"
+    };
+
 
     public static void main(String[] args) {
 
         System.out.println("=== LABORATOR CR-232 ===");
         System.out.println("Echipa: Cuturov Oleg si Costriba Serafim\n");
 
-        System.out.println("TH_3  [234, 1000]:");
-        printArray(ARRAY1);
+        System.out.println("Array1 [234..1000]:");
+        printArray(array1);
         System.out.println();
 
-        System.out.println("TH_4  [456, 1234]:");
-        printArray(ARRAY2);
+        System.out.println("Array2 [456..1234]:");
+        printArray(array2);
         System.out.println();
+
+
+        Thread th1 = new Thread(new ThreadsSerafim.Task1(), "Thread-1");
+        Thread th2 = new Thread(new ThreadsSerafim.Task2(), "Thread-2");
+        Thread th3 = new Thread(new ThreadsOleg.Task3(), "Thread-3");
+        Thread th4 = new Thread(new ThreadsOleg.Task4(), "Thread-4");
 
         System.out.println("Starting Thread 1");
         System.out.println("Starting Thread 2");
         System.out.println("Starting Thread 3");
         System.out.println("Starting Thread 4\n");
-
-        // firele din fișiere separate
-        Thread th1 = new Thread(new ThreadsSerafim.Task1(), "Thread-1");
-        Thread th2 = new Thread(new ThreadsSerafim.Task2(), "Thread-2");
-        Thread th3 = new Thread(new ThreadsOleg.Task3(), "Thread-3");
-        Thread th4 = new Thread(new ThreadsOleg.Task4(), "Thread-4");
 
         th1.start();
         th2.start();
@@ -52,77 +57,53 @@ public class LaboratorThreadsMain {
             e.printStackTrace();
         }
 
-        System.out.println("\nToate firele de execuție s-au încheiat.");
+        System.out.println("\n=== Toate firele s-au încheiat. ===");
     }
 
-    // ================= utilitare =================
 
-    private static int[] generateArray(int start, int end) {
+
+    public static int[] generateArray(int start, int end) {
         int size = end - start + 1;
-        int[] array = new int[size];
-        for (int i = 0; i < size; i++) {
-            array[i] = start + i;
-        }
-        return array;
+        int[] arr = new int[size];
+        for (int i = 0; i < size; i++) arr[i] = start + i;
+        return arr;
     }
 
-    private static void printArray(int[] array) {
-        for (int i = 0; i < array.length; i++) {
-            System.out.print(array[i] + " ");
-            if ((i + 1) % 15 == 0) {
-                System.out.println();
-            }
+    public static void printArray(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i] + " ");
+            if ((i + 1) % 15 == 0) System.out.println();
         }
         System.out.println();
     }
 
-    // ================= sincronizator comun =================
-    public static class SyncHelper {
-        private volatile int finishedThreads = 0;
-        private volatile int currentDisplay = 0;
-        private final int[] displayOrder;
-        private final int totalThreads;
+    public static synchronized void threadFinished() {
+        finishedThreads++;
+    }
 
-        public SyncHelper(int[] displayOrder, int totalThreads) {
-            this.displayOrder = displayOrder;
-            this.totalThreads = totalThreads;
+    public static void waitForAllThreads() {
+        while (finishedThreads < 4) {
+            try { Thread.sleep(10); } catch (InterruptedException ignored) {}
+        }
+    }
+
+    public static void printWithDelay(String text, int delay) {
+        for (char c : text.toCharArray()) {
+            System.out.print(c);
+            try { Thread.sleep(delay); } catch (InterruptedException ignored) {}
+        }
+        System.out.println();
+    }
+
+    public static void displayInOrder(String threadName, String text) {
+
+        while (!DISPLAY_ORDER[currentDisplay].equals(threadName)) {
+            try { Thread.sleep(10); } catch (InterruptedException ignored) {}
         }
 
-        public void markFinished() {
-            finishedThreads++;
-        }
+        System.out.print(threadName + ": ");
+        printWithDelay(text, 100);
 
-        public void waitAll() {
-            while (finishedThreads < totalThreads) {
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        public void displayInOrder(int threadNumber, String text) {
-            while (currentDisplay < displayOrder.length &&
-                    displayOrder[currentDisplay] != threadNumber) {
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            for (char c : (threadNumber + ": " + text).toCharArray()) {
-                System.out.print(c);
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    // ignore
-                }
-            }
-            System.out.println();
-
-            currentDisplay++;
-        }
+        currentDisplay++;
     }
 }
