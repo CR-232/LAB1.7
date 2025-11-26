@@ -1,8 +1,8 @@
 /**
  * Laborator 2 – varianta 7.
  * <p>
- * Acest program creează ierarhia de grupuri și fire de execuție cerută de varianta 7,
- * conform tabelului din enunţ. Nu se suprascrie metoda run(), iar după
+ * creează ierarhia de grupuri și fire de execuție varianta 7,
+ * conform tabelului din enunţ.
  * pornirea firelor se enumeră toate firele active pentru a afișa numele,
  * grupul din care fac parte, prioritatea lor şi prioritatea grupului.
  */
@@ -77,6 +77,8 @@ void main() {
     } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
     }
+    // Afișarea priorității fiecărui grup
+    displayGroupPriorities(mainGroup, G1, G2, G3);
     // Enumerarea firelor active din grupul principal și subgrupurile sale.
     enumerateGroup(mainGroup);
     // Așteptăm terminarea firelor înainte de ieșire.
@@ -97,9 +99,23 @@ void main() {
 }
 
 /**
+ * Afișează prioritatea fiecărui grup din ierarhie.
+ */
+public static void displayGroupPriorities(ThreadGroup mainGroup, ThreadGroup G1, ThreadGroup G2, ThreadGroup G3) {
+    IO.println("\n=== Prioritatea grupurilor ===");
+    IO.println("Grup: " + mainGroup.getName() + " - Prioritate (maxPriority): " + mainGroup.getMaxPriority());
+    IO.println("Grup: " + G1.getName() + " - Prioritate (maxPriority): " + G1.getMaxPriority() + 
+               " (părinte: " + G1.getParent().getName() + ")");
+    IO.println("Grup: " + G2.getName() + " - Prioritate (maxPriority): " + G2.getMaxPriority() + 
+               " (părinte: " + G2.getParent().getName() + ")");
+    IO.println("Grup: " + G3.getName() + " - Prioritate (maxPriority): " + G3.getMaxPriority() + 
+               " (părinte: " + G3.getParent().getName() + ")");
+    IO.println("================================\n");
+}
+
+/**
  * Enumeră recursiv firele active dintr-un grup dat (inclusiv subgrupurile) şi afişează
  * numele firului, grupul, prioritatea firului şi prioritatea grupului.
- *
  * @param group grupul de fire în care se face enumerarea
  */
 public static void enumerateGroup(ThreadGroup group) {

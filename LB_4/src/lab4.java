@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Main {
+public class lab4 {
     public static void main(String[] args) throws InterruptedException {
 
         Storage storage = new Storage();
@@ -109,4 +109,28 @@ class Producer extends Thread {
     }
 }
 
+class Consumer extends Thread {
+    private final Storage storage;
+    private final String name;
 
+    public Consumer(Storage s, String name) {
+        this.storage = s;
+        this.name = name;
+    }
+
+    @Override
+    public void run() {
+        int consumed = 0;
+
+        while (consumed < 5) {
+            storage.get(name);
+            consumed++;
+
+            try {
+                sleep(300);
+            } catch (InterruptedException ignored) {}
+        }
+
+        System.out.println("Succes " + name + " a consumat 5 vocale și s-a terminat.");
+    }
+}
