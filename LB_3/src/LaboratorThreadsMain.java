@@ -18,6 +18,12 @@ public class LaboratorThreadsMain {
             "Thread-2", "Thread-4", "Thread-1", "Thread-3"
     };
 
+    // Obiect de sincronizare pentru threadFinished
+    private static final Object finishedLock = new Object();
+    
+    // Obiect de sincronizare pentru displayInOrder
+    private static final Object displayLock = new Object();
+
 
     public static void main(String[] args) {
 
@@ -62,13 +68,24 @@ public class LaboratorThreadsMain {
 
 
 
-    public static synchronized void threadFinished() {
-        finishedThreads++;
+    public static void threadFinished() {
+        synchronized (finishedLock) {
+            finishedThreads++;
+            if (finishedThreads == 4) {
+                finishedLock.notifyAll();
+            }
+        }
     }
 
     public static void waitForAllThreads() {
-        while (finishedThreads < 4) {
-            try { Thread.sleep(10); } catch (InterruptedException ignored) {}
+        synchronized (finishedLock) {
+            while (finishedThreads < 4) {
+                try {
+                    finishedLock.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
         }
     }
 
@@ -81,14 +98,20 @@ public class LaboratorThreadsMain {
     }
 
     public static void displayInOrder(String threadName, String text) {
+        synchronized (displayLock) {
+            while (!DISPLAY_ORDER[currentDisplay].equals(threadName)) {
+                try {
+                    displayLock.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
 
-        while (!DISPLAY_ORDER[currentDisplay].equals(threadName)) {
-            try { Thread.sleep(10); } catch (InterruptedException ignored) {}
+            System.out.print(threadName + ": ");
+            printWithDelay(text, 100);
+
+            currentDisplay++;
+            displayLock.notifyAll();
         }
-
-        System.out.print(threadName + ": ");
-        printWithDelay(text, 100);
-
-        currentDisplay++;
     }
 }
