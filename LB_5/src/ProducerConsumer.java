@@ -1,4 +1,3 @@
-import java.io.IO;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -10,8 +9,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Autori: Cuturov Oleg și Costriba Serafim
  *
  * Parametri:
- * - X = 3 producători ( Costriba Serefim )
- * - Y = 3 consumatori  ( Cuturov Oleg )
+ * - X = 3 producători (Costriba Serefim)
+ * - Y = 3 consumatori (Cuturov Oleg)
  * - Z = 5 obiecte per consumator
  * - D = 6 (capacitate buffer)
  * - Tip obiecte: Vocale (A, E, I, O, U)
@@ -19,11 +18,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ProducerConsumer {
 
-    private static final int PRODUCER_COUNT = 3;  // X
-    private static final int CONSUMER_COUNT = 3;  // Y
-    private static final int CONSUMER_GOAL = 5;   // Z
-    private static final int BUFFER_CAPACITY = 6; // D
-    private static final int OBJECTS_PER_PRODUCER = 2; // F
+    private static final int PRODUCER_COUNT = 3;
+    private static final int CONSUMER_COUNT = 3;
+    private static final int CONSUMER_GOAL = 5;
+    private static final int BUFFER_CAPACITY = 6;
+    private static final int OBJECTS_PER_PRODUCER = 2;
 
     private static final BlockingQueue<Character> buffer =
             new ArrayBlockingQueue<>(BUFFER_CAPACITY);
@@ -36,14 +35,15 @@ public class ProducerConsumer {
     private static final char[] vowels = {'A', 'E', 'I', 'O', 'U'};
 
     public static void main(String[] args) {
-        IO.println("========== PRODUCER-CONSUMER VARIANT 7 ==========");
-        IO.println("Producători (Costriba Serafim): " + PRODUCER_COUNT);
-        IO.println("Consumatori (Cuturov Oleg): " + CONSUMER_COUNT);
-        IO.println("Obiecte per consumator: " + CONSUMER_GOAL);
-        IO.println("Capacitate buffer: " + BUFFER_CAPACITY);
-        IO.println("Tip obiecte: Vocale (A, E, I, O, U)");
-        IO.println("Obiecte per producător: " + OBJECTS_PER_PRODUCER);
-        IO.println("===============================================\n");
+
+        System.out.println("========== PRODUCER-CONSUMER VARIANT 7 ==========");
+        System.out.println("Producători (Costriba Serafim): " + PRODUCER_COUNT);
+        System.out.println("Consumatori (Cuturov Oleg): " + CONSUMER_COUNT);
+        System.out.println("Obiecte per consumator: " + CONSUMER_GOAL);
+        System.out.println("Capacitate buffer: " + BUFFER_CAPACITY);
+        System.out.println("Tip obiecte: Vocale (A, E, I, O, U)");
+        System.out.println("Obiecte per producător: " + OBJECTS_PER_PRODUCER);
+        System.out.println("===============================================\n");
 
         for (int i = 1; i <= CONSUMER_COUNT; i++) {
             consumerCounters.put(i, new AtomicInteger(0));
@@ -68,13 +68,12 @@ public class ProducerConsumer {
             e.printStackTrace();
         }
 
-        IO.println("\n========== RAPORT FINAL ==========");
-        IO.println("Total produse: " + totalProduced.get());
-        IO.println("Total consumate: " + totalConsumed.get());
+        System.out.println("\n========== RAPORT FINAL ==========");
+        System.out.println("Total produse: " + totalProduced.get());
+        System.out.println("Total consumate: " + totalConsumed.get());
         consumerCounters.forEach((id, count) ->
-                IO.println("Consumator " + id + ": " + count.get() +
-                        " obiecte consumate"));
-        IO.println("==================================");
+                System.out.println("Consumator " + id + ": " + count.get() + " obiecte consumate"));
+        System.out.println("==================================");
     }
 
 
@@ -92,7 +91,7 @@ public class ProducerConsumer {
                 while (totalConsumed.get() < CONSUMER_COUNT * CONSUMER_GOAL) {
 
                     if (buffer.remainingCapacity() == 0) {
-                        IO.println("Δ [Producător " + id + "] Depozitul e plin, așteaptă...");
+                        System.out.println("Δ [Producător " + id + "] Depozitul e plin, așteaptă...");
                     }
 
                     // GENERĂM DOUĂ VOCALE DISTINCTE
@@ -102,20 +101,16 @@ public class ProducerConsumer {
                         v2 = vowels[random.nextInt(vowels.length)];
                     } while (v2 == v1);
 
-                    // Dacă nu mai este nevoie, ieșim
                     if (totalConsumed.get() >= CONSUMER_COUNT * CONSUMER_GOAL) {
                         break;
                     }
 
-                    // Adăugăm în buffer cele două vocale
                     buffer.put(v1);
                     buffer.put(v2);
 
-                    // Incrementăm totalul produs cu 2
                     int produced = totalProduced.addAndGet(2);
 
-                    // Afișăm PERECHEA pe un singur rând
-                    IO.println("+ [Producător " + id + "] a produs: "
+                    System.out.println("+ [Producător " + id + "] a produs: "
                             + v1 + " " + v2
                             + " | Total produse: " + produced
                             + " | Capacitate: " + buffer.size() + "/" + BUFFER_CAPACITY);
@@ -123,7 +118,7 @@ public class ProducerConsumer {
                     Thread.sleep(100);
                 }
 
-                IO.println("✓ Producătorul " + id + " s-a finalizat");
+                System.out.println("✓ Producătorul " + id + " s-a finalizat");
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -131,9 +126,7 @@ public class ProducerConsumer {
         }
     }
 
-    // =================================
-    // CLASA CONSUMATOR
-    // =================================
+
     static class Consumer implements Runnable {
         private final int id;
 
@@ -147,7 +140,7 @@ public class ProducerConsumer {
                 while (consumerCounters.get(id).get() < CONSUMER_GOAL) {
 
                     if (buffer.isEmpty()) {
-                        IO.println("Δ [Consumator " + id + "] Depozitul e gol, așteaptă...");
+                        System.out.println("Δ [Consumator " + id + "] Depozitul e gol, așteaptă...");
                     }
 
                     char item = buffer.take();
@@ -155,7 +148,7 @@ public class ProducerConsumer {
                     int consumed = consumerCounters.get(id).incrementAndGet();
                     int total = totalConsumed.incrementAndGet();
 
-                    IO.println("- [Consumator " + id + "] a consumat: " +
+                    System.out.println("- [Consumator " + id + "] a consumat: " +
                             item + " | Consumat de acest consumator: " +
                             consumed + "/" + CONSUMER_GOAL +
                             " | Total consumate: " + total +
@@ -164,8 +157,8 @@ public class ProducerConsumer {
                     Thread.sleep(150);
                 }
 
-                IO.println("✓ Consumatorul " + id + " s-a finalizat (a consumat " +
-                        CONSUMER_GOAL + " obiecte)");
+                System.out.println("✓ Consumatorul " + id + " s-a finalizat (a consumat "
+                        + CONSUMER_GOAL + " obiecte)");
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
