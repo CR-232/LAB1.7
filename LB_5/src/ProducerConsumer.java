@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * - Tip obiecte: Vocale (A, E, I, O, U)
  * - F = 2 obiecte per producător
  */
-public class MainPC {
+public class ProducerConsumer {
 
     private static final int PRODUCER_COUNT = 3;  // X
     private static final int CONSUMER_COUNT = 3;  // Y
