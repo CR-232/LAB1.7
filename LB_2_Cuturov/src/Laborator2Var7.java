@@ -78,7 +78,7 @@ void main() {
         Thread.currentThread().interrupt();
     }
     // Afișarea priorității fiecărui grup
-    displayGroupPriorities(mainGroup, G1, G2, G3);
+    displayGroupPriorities(mainGroup, G1, G2, G3, ThA, Th11, Th22, Th1, Th2, Th33, Thaa, Thbb, Thcc, Thdd);
     // Enumerarea firelor active din grupul principal și subgrupurile sale.
     enumerateGroup(mainGroup);
     // Așteptăm terminarea firelor înainte de ieșire.
@@ -99,18 +99,36 @@ void main() {
 }
 
 /**
- * Afișează prioritatea fiecărui grup din ierarhie.
+ * Afișează prioritatea fiecărui grup din ierarhie în același format ca enumerarea firelor.
  */
-public static void displayGroupPriorities(ThreadGroup mainGroup, ThreadGroup G1, ThreadGroup G2, ThreadGroup G3) {
+public static void displayGroupPriorities(ThreadGroup mainGroup, ThreadGroup G1, ThreadGroup G2, ThreadGroup G3,
+                                         Thread ThA, Thread Th11, Thread Th22, Thread Th1, Thread Th2, Thread Th33,
+                                         Thread Thaa, Thread Thbb, Thread Thcc, Thread Thdd) {
     IO.println("\n=== Prioritatea grupurilor ===");
-    IO.println("Grup: " + mainGroup.getName() + " - Prioritate (maxPriority): " + mainGroup.getMaxPriority());
-    IO.println("Grup: " + G1.getName() + " - Prioritate (maxPriority): " + G1.getMaxPriority() + 
-               " (părinte: " + G1.getParent().getName() + ")");
-    IO.println("Grup: " + G2.getName() + " - Prioritate (maxPriority): " + G2.getMaxPriority() + 
-               " (părinte: " + G2.getParent().getName() + ")");
-    IO.println("Grup: " + G3.getName() + " - Prioritate (maxPriority): " + G3.getMaxPriority() + 
-               " (părinte: " + G3.getParent().getName() + ")");
-    IO.println("================================\n");
+    
+    // Main grup (rădăcină) - nu are părinte
+    IO.println("Nume grup: " + mainGroup.getName() + 
+               ", prioritate grup (maxPriority): " + mainGroup.getMaxPriority());
+    
+    // G2 subgrup
+    ThreadGroup G2Parent = G2.getParent();
+    IO.println("Nume grup: " + G2.getName() + 
+               ", prioritate grup (maxPriority): " + G2.getMaxPriority() + 
+               (G2Parent != null ? ", grup părinte: " + G2Parent.getName() : ""));
+    
+    // G1 subgrup
+    ThreadGroup G1Parent = G1.getParent();
+    IO.println("Nume grup: " + G1.getName() + 
+               ", prioritate grup (maxPriority): " + G1.getMaxPriority() + 
+               (G1Parent != null ? ", grup părinte: " + G1Parent.getName() : ""));
+    
+    // G3 subgrup (subgrup al lui G1)
+    ThreadGroup G3Parent = G3.getParent();
+    IO.println("Nume grup: " + G3.getName() + 
+               ", prioritate grup (maxPriority): " + G3.getMaxPriority() + 
+               (G3Parent != null ? ", grup părinte: " + G3Parent.getName() : ""));
+    
+    IO.println();
 }
 
 /**
