@@ -14,9 +14,9 @@ public class ThreadsOleg {
             System.out.println("Rol: de parcurs de la ÎNCEPUT intervalul [234, 1000]");
             System.out.println("Th3: Parcurgere DE LA ÎNCEPUT intervalul [234, 1000]");
 
-            // Preluăm tabloul generat în clasa principală LaboratorThreadsMain
-            int[] array1 = LaboratorThreadsMain.array1; // valori în intervalul [234, 1000]
-            int countInLine = 0; // contor pentru a rupe linia după un anumit număr de elemente
+            // Preluăm tabloul generat
+            int[] array1 = LaboratorThreadsMain.array1; //  intervalul [234, 1000]
+            int countInLine = 0; // contor
 
             try {
                 // Parcurgem tabloul de la început la sfârșit
@@ -34,19 +34,19 @@ public class ThreadsOleg {
                     System.out.print("Th3:" + array1[i] + " ");
                     countInLine++;
 
-                    // La fiecare 25 de elemente trecem pe o linie nouă pentru lizibilitate
+                    //  linie nouă
                     if (countInLine == 25) {
                         System.out.println();
                         countInLine = 0;
                     }
 
-                    // Metodă din Thread: punem thread-ul să "doarmă" 2 ms
+                    // Metodă din Thread:2 ms
                     Thread.sleep(2);
                 }
             } catch (InterruptedException e) {
                 // Dacă sleep este întrerupt, ajungem aici
                 System.out.println("\nTh3: Sleep întrerupt!");
-                // Metodă din Thread: refacem flag-ul de întrerupere
+                // Thread: refacem flag-ul de întrerupere
                 currentThread.interrupt();
                 return;
             }
@@ -58,22 +58,22 @@ public class ThreadsOleg {
             // Semnalăm în clasa principală că acest thread și-a terminat treaba
             LaboratorThreadsMain.threadFinished();
 
-            // Așteptăm terminarea tuturor thread-urilor (logica este în LaboratorThreadsMain)
+            // terminarea thread-urilor (logica LaboratorThreadsMain)
             LaboratorThreadsMain.waitForAllThreads();
 
-            // Afișăm textul în ordinea stabilită (Thread-3 are poziția lui în DISPLAY_ORDER)
+            // Afișăm  ordinea stabilită în DISPLAY_ORDER
             LaboratorThreadsMain.displayInOrder("Thread-3", LaboratorThreadsMain.GRUPA);
         }
     }
 
-    // Task-ul 4 – rulează pe Thread-4
+    // Task 4
     public static class Task4 implements Runnable {
         @Override
         public void run() {
-            // Metodă din clasa Thread: obține referința la thread-ul curent
+            // Thread:  referința la thread-ul curent
             Thread currentThread = Thread.currentThread();
 
-            // Metode din Thread folosite pentru informații despre thread
+            // informații despre thread
             System.out.println("=== TH4 – Cuturov Oleg ===");
             System.out.println("Thread name: " + currentThread.getName()); // Thread.getName()
             System.out.println("Thread ID: " + currentThread.getId());     // Thread.getId()
@@ -111,22 +111,17 @@ public class ThreadsOleg {
                 }
             } catch (InterruptedException e) {
                 System.out.println("\nTh4: Sleep întrerupt!");
-                // Metodă din Thread: refacem flag-ul de întrerupere
                 currentThread.interrupt();
                 return;
             }
 
-            // Mesaj final cu numărul de elemente prelucrate
             System.out.println("\n>>> Th4 FINAL: " + array2.length +
                     " elemente procesate [realizat de: Cuturov Oleg]");
 
-            // Anunțăm că și acest thread a terminat
             LaboratorThreadsMain.threadFinished();
 
-            // Așteptăm toate thread-urile
             LaboratorThreadsMain.waitForAllThreads();
 
-            // Afișăm textul în ordinea stabilită (Thread-4 are poziția lui în DISPLAY_ORDER)
             LaboratorThreadsMain.displayInOrder("Thread-4", LaboratorThreadsMain.GRUPA);
         }
     }
