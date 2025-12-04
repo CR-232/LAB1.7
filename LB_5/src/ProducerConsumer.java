@@ -142,7 +142,6 @@ public class ProducerConsumer {
                     if (buffer.isEmpty()) {
                         System.out.println("Δ [Consumator " + id + "] Depozitul e gol, așteaptă...");
                     }
-
                     char item = buffer.take();
 
                     int consumed = consumerCounters.get(id).incrementAndGet();
